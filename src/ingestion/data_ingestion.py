@@ -39,9 +39,12 @@ def store_data(raw_folder, stored_base_folder):
        stored_base_folder/year/month/day/
     
     Each file name will be appended with the current timestamp.
-    To ensure only the new (timestamp) version is saved, the target folder for the day is
-    cleared before copying.
+    
+    After copying, this function deletes any file directly in the 
+    stored_base_folder (non-directory items) to ensure only the timestamped versions remain.
     """
+    import shutil, re
+
     # Get current timestamp details.
     timestamp = datetime.now()
     year = timestamp.strftime("%Y")
@@ -56,7 +59,7 @@ def store_data(raw_folder, stored_base_folder):
         shutil.rmtree(target_folder)
     os.makedirs(target_folder, exist_ok=True)
     
-    # For each file in the raw folder, copy it to target_folder with timestamp appended.
+    # Copy each file from the raw folder into the target folder with a timestamp appended.
     for file in os.listdir(raw_folder):
         file_path = os.path.join(raw_folder, file)
         if os.path.isfile(file_path):
@@ -65,6 +68,13 @@ def store_data(raw_folder, stored_base_folder):
             target_file = os.path.join(target_folder, new_file_name)
             shutil.copy(file_path, target_file)
             logging.info(f"Stored file {target_file}")
+    
+    # Now, remove any files that might be directly under stored_base_folder (non-directory entries)
+    for item in os.listdir(stored_base_folder):
+        item_path = os.path.join(stored_base_folder, item)
+        if os.path.isfile(item_path):
+            os.remove(item_path)
+            logging.info(f"Deleted non-timestamp file {item_path}")
 
 if __name__ == "__main__":
     # Compute the project root (assumes this file is in src/ingestion)
