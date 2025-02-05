@@ -1,3 +1,5 @@
+# src/transformation/data_transformation.py
+
 import os
 import pandas as pd
 import sqlite3
@@ -85,7 +87,7 @@ def transform_data(df):
     
     return df_encoded
 
-def store_transformed_data(df, db_path="data/processed/employee_attrition_features.db"):
+def store_transformed_data(df, db_path):
     """
     Store the transformed DataFrame into a SQLite database.
     
@@ -107,8 +109,11 @@ def store_transformed_data(df, db_path="data/processed/employee_attrition_featur
     print(f"Transformed data stored in SQLite database at: {db_path}")
 
 if __name__ == "__main__":
-    # Path to the cleaned CSV file produced in the data preparation step.
-    clean_data_path = os.path.join("data", "processed", "clean_data.csv")
+    # Compute the project root relative to this file (assumes file is at src/transformation)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    
+    # Define the path to the cleaned CSV file produced in the data preparation step.
+    clean_data_path = os.path.join(project_root, "data", "processed", "clean_data.csv")
     
     if not os.path.exists(clean_data_path):
         print(f"Clean data file not found at: {clean_data_path}")
@@ -125,5 +130,8 @@ if __name__ == "__main__":
         print(df_transformed.info())
         print(df_transformed.head())
         
-        # Store the transformed data into a SQLite database.
-        store_transformed_data(df_transformed)
+        # Define the path to store the SQLite database for the transformed data.
+        db_path = os.path.join(project_root, "data", "processed", "employee_attrition_features.db")
+        
+        # Store the transformed data into the SQLite database.
+        store_transformed_data(df_transformed, db_path)

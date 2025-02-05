@@ -44,11 +44,12 @@ def partition_raw_data(source_folder, storage_root):
             print(f"Copied {filename} to {destination_path}")
 
 if __name__ == "__main__":
-    # Define the source folder where the raw Kaggle dataset was downloaded
-    source_folder = os.path.join("data", "raw", "kaggle")
+    # Move up two directories from src/storage to project root, then into data/raw/kaggle
+    source_folder = os.path.join(os.path.dirname(__file__), "../../data/raw/kaggle")
+    source_folder = os.path.abspath(source_folder)  # Convert to absolute path
     
-    # Define the storage root for partitioned raw data
-    storage_root = os.path.join("data", "stored", "raw")
+    # Similarly for your storage root, e.g. ../../data/stored/raw
+    storage_root = os.path.join(os.path.dirname(__file__), "../../data/stored/raw")
+    storage_root = os.path.abspath(storage_root)
     
-    # Run the partitioning process
     partition_raw_data(source_folder, storage_root)

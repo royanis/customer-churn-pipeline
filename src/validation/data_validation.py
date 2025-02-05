@@ -58,18 +58,16 @@ def validate_data(file_path):
         report['duplicate_rows'] = duplicate_count
         
         # Validate specific column ranges or types (example validations)
-        # Example: If 'Age' column exists, ensure values are within a realistic range (e.g., 18 to 65)
         if 'Age' in df.columns:
             invalid_age_rows = df[(df['Age'] < 18) | (df['Age'] > 65)]
             report['invalid_age_rows'] = invalid_age_rows.shape[0]
         
-        # Example: Check if 'EmployeeNumber' is unique (if available)
         if 'EmployeeNumber' in df.columns:
             unique_count = df['EmployeeNumber'].nunique()
             total_count = df.shape[0]
             report['employee_number_unique'] = (unique_count == total_count)
         
-        # (Optional) Add any other domain-specific validations here
+        # Add other domain-specific validations if needed
         
     except Exception as e:
         report['error'] = str(e)
@@ -77,10 +75,15 @@ def validate_data(file_path):
     return report
 
 if __name__ == "__main__":
-    # Define the root directory where the partitioned raw data is stored
-    root_storage_dir = os.path.join("data", "stored", "raw", "kaggle")
+    # Compute the project root by going up two levels from the current script's directory.
+    # src/validation/ --> src/ --> project root (customer_churn_group58_root)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     
-    # Find the latest CSV file in the storage directory
+    # Define the root directory where the ingested raw data is stored.
+    # This now points to the folder where ingestion places files (with a timestamped subfolder).
+    root_storage_dir = os.path.join(project_root, "data", "raw", "kaggle")
+    
+    # Find the latest CSV file in the storage directory (searches recursively)
     latest_file = find_latest_file(root_storage_dir, extension=".csv")
     
     if not latest_file:
@@ -94,7 +97,7 @@ if __name__ == "__main__":
         for key, value in quality_report.items():
             print(f"{key}: {value}")
         
-        # Optionally, save the report as CSV
+        # Optionally, save the report as a CSV
         report_df = pd.DataFrame([quality_report])
         os.makedirs("logs", exist_ok=True)
         report_path = os.path.join("logs", "data_quality_report.csv")

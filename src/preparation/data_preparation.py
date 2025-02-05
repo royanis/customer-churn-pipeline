@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
+from datetime import datetime
 
 def find_latest_file(root_dir, extension=".csv"):
     """
@@ -112,8 +113,6 @@ def prepare_data(file_path):
             print(f"Removed {initial_count - final_count} outlier rows from '{col}'.")
     
     # --- Step 5: (Optional) Standardize Numeric Columns ---
-    # For this dataset, you might want to preserve raw values (like age and length_of_service)
-    # For demonstration, we will standardize these numeric columns.
     for col in numeric_cols:
         mean_val = df[col].mean()
         std_val = df[col].std()
@@ -125,10 +124,6 @@ def prepare_data(file_path):
     # --- Step 6: Process Categorical Variables ---
     categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
     
-    # We'll define thresholds:
-    #  - If unique values ≤ 20: use one-hot encoding.
-    #  - If unique values are > 20 and ≤ 50: use label encoding.
-    #  - If unique values > 50: drop the column.
     one_hot_cols = []
     label_enc_cols = []
     drop_cols = []
@@ -147,18 +142,18 @@ def prepare_data(file_path):
         print("\nDropping high-cardinality columns:", drop_cols)
         df.drop(columns=drop_cols, inplace=True)
     
-    # One-hot encode the low-cardinality categorical columns.
     if one_hot_cols:
         df = pd.get_dummies(df, columns=one_hot_cols, drop_first=True)
     
-    # For columns with moderate cardinality, apply label encoding.
     if label_enc_cols:
         le = LabelEncoder()
         for col in label_enc_cols:
             df[col] = le.fit_transform(df[col])
     
     # --- Step 7: Save the Cleaned Dataset ---
-    processed_folder = os.path.join("data", "processed")
+    # Compute the project root to define absolute paths.
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    processed_folder = os.path.join(project_root, "data", "processed")
     os.makedirs(processed_folder, exist_ok=True)
     clean_file_path = os.path.join(processed_folder, "clean_data.csv")
     df.to_csv(clean_file_path, index=False)
@@ -208,10 +203,12 @@ def prepare_data(file_path):
     return df
 
 if __name__ == "__main__":
-    # Define the directory where raw stored data is located.
-    raw_data_dir = os.path.join("data", "stored", "raw", "kaggle")
+    # Compute the project root for absolute paths.
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    # Define the directory where raw data is stored (aligned with the ingestion output).
+    raw_data_dir = os.path.join(project_root, "data", "raw", "kaggle")
     
-    # Find the latest CSV file
+    # Find the latest CSV file in the raw data directory
     latest_file = find_latest_file(raw_data_dir, extension=".csv")
     
     if not latest_file:

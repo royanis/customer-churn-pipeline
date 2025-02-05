@@ -37,7 +37,7 @@ def add_data_to_dvc(data_path):
     Add a data directory or file to DVC tracking.
     
     Args:
-        data_path (str): The relative path to the data directory or file.
+        data_path (str): The relative or absolute path to the data directory or file.
     """
     if os.path.exists(data_path):
         print(f"Adding '{data_path}' to DVC tracking...")
@@ -67,12 +67,16 @@ def tag_version(version):
     run_command(f"git tag {version}")
 
 if __name__ == "__main__":
+    # Compute the project root (assumes this file is in src/versioning)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    os.chdir(project_root)  # Ensure commands run in the project root
+
     # Step 1: Initialize DVC.
     init_dvc()
     
     # Step 2: Add raw and processed data to DVC tracking.
-    raw_data_path = os.path.join("data", "raw")
-    processed_data_path = os.path.join("data", "processed")
+    raw_data_path = os.path.join(project_root, "data", "raw")
+    processed_data_path = os.path.join(project_root, "data", "processed")
     
     add_data_to_dvc(raw_data_path)
     add_data_to_dvc(processed_data_path)
@@ -83,6 +87,6 @@ if __name__ == "__main__":
     commit_changes(commit_message)
     
     # Step 4: Tag the commit with a version identifier.
-    tag_version("v1.0")
+    tag_version("v1.1")
     
     print("Data versioning complete.")

@@ -8,13 +8,9 @@ from datetime import datetime
 def download_kaggle_dataset(dataset_slug, dest_folder):
     """
     Download a dataset from Kaggle using the Kaggle API.
-
-    Args:
-        dataset_slug (str): The Kaggle dataset identifier (e.g., 'HRAnalyticRepository/employee-attrition-data').
-        dest_folder (str): The local folder where the dataset will be stored.
     """
     try:
-        # Ensure the destination folder exists
+        # Ensure the destination folder exists (it should already have been created with the timestamp)
         os.makedirs(dest_folder, exist_ok=True)
         
         # Log the start of the download
@@ -33,17 +29,26 @@ def download_kaggle_dataset(dataset_slug, dest_folder):
         logging.error(f"{timestamp}: An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    # Configure logging to store logs in the logs folder
-    os.makedirs("logs", exist_ok=True)
+    # Determine the script's directory and compute the project root.
+    script_path = os.path.dirname(__file__)  # .../src/ingestion
+    project_root = os.path.abspath(os.path.join(script_path, "../../"))  # Go up two levels to the project root
+
+    # Define the base destination folder for raw Kaggle data.
+    base_dest_folder = os.path.join(project_root, "data", "raw", "kaggle")
+    
+    # Create a new subfolder with the current timestamp
+    timestamp_folder = datetime.now().strftime("%Y%m%d_%H%M%S")
+    dest_folder = os.path.join(base_dest_folder, timestamp_folder)
+    
+    # Configure logging
+    logs_path = os.path.join(project_root, "logs")
+    os.makedirs(logs_path, exist_ok=True)
     logging.basicConfig(
-        filename='logs/ingestion.log',
+        filename=os.path.join(logs_path, 'ingestion.log'),
         level=logging.INFO,
         format='%(asctime)s:%(levelname)s:%(message)s'
     )
 
-    # Define the Kaggle dataset slug for Employee Attrition Data and destination folder
+    # Download the dataset into the timestamped folder
     dataset_slug = "HRAnalyticRepository/employee-attrition-data"
-    dest_folder = os.path.join("data", "raw", "kaggle")
-    
-    # Download the dataset
     download_kaggle_dataset(dataset_slug, dest_folder)

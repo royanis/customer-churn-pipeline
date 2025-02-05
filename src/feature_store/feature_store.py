@@ -1,10 +1,15 @@
+# src/feature_store/feature_store.py
+
 import os
 import json
 import sqlite3
 import pandas as pd
 
-# Define the path where the feature store (metadata) will be saved.
-FEATURE_STORE_PATH = os.path.join("data", "processed", "feature_store.json")
+# Compute the project root relative to this file (assumes file is in src/feature_store)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+# Define the absolute path where the feature store (metadata) will be saved.
+FEATURE_STORE_PATH = os.path.join(PROJECT_ROOT, "data", "processed", "feature_store.json")
 
 def register_feature(feature_name, description, source, version):
     """
@@ -68,17 +73,21 @@ def list_features():
         print("Feature store file not found. No features have been registered yet.")
         return {}
 
-def retrieve_features(query="SELECT * FROM employee_features LIMIT 5", db_path="data/processed/employee_attrition_features.db"):
+def retrieve_features(query="SELECT * FROM employee_features LIMIT 5", 
+                      db_path=None):
     """
     Retrieve sample feature data from the SQLite database created during the Data Transformation step.
 
     Args:
         query (str): The SQL query to execute.
-        db_path (str): Path to the SQLite database file.
-
+        db_path (str): Path to the SQLite database file. If None, defaults to the processed database in the project.
+    
     Returns:
         pd.DataFrame or None: DataFrame with query results if successful; otherwise, None.
     """
+    if db_path is None:
+        db_path = os.path.join(PROJECT_ROOT, "data", "processed", "employee_attrition_features.db")
+        
     if not os.path.exists(db_path):
         print(f"Database not found at {db_path}.")
         return None
