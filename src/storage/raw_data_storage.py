@@ -1,3 +1,5 @@
+# src/storage/raw_data_storage.py
+
 import os
 import shutil
 from datetime import datetime
@@ -6,7 +8,6 @@ import re
 def partition_raw_data(source_folder, storage_root):
     """
     Organizes files from source_folder into a partitioned folder structure in storage_root.
-    The partitioning is based on the file's last modification time.
     
     Only files whose names include a timestamp (pattern: _YYYYMMDD_HHMMSS) are processed.
     
@@ -27,7 +28,7 @@ def partition_raw_data(source_folder, storage_root):
     
     # Iterate over each file in the source folder.
     for filename in os.listdir(source_folder):
-        # Check if the filename matches the timestamp pattern.
+        # Process only files that match the timestamp pattern.
         if not timestamp_pattern.match(filename):
             print(f"Skipping non-timestamp file: {filename}")
             continue
