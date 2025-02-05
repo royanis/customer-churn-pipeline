@@ -203,12 +203,12 @@ def prepare_data(file_path):
     return df
 
 if __name__ == "__main__":
-    # Compute the project root for absolute paths.
+    # Compute project root.
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    # Define the directory where raw data is stored (aligned with the ingestion output).
-    raw_data_dir = os.path.join(project_root, "data", "raw", "kaggle")
     
-    # Find the latest CSV file in the raw data directory
+    # Use the stored folder for raw data.
+    raw_data_dir = os.path.join(project_root, "data", "stored", "raw", "kaggle")
+    
     latest_file = find_latest_file(raw_data_dir, extension=".csv")
     
     if not latest_file:
