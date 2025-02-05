@@ -1,3 +1,5 @@
+# src/ingestion/data_ingestion.py
+
 import os
 import logging
 import subprocess
@@ -32,8 +34,13 @@ def download_kaggle_dataset(dataset_slug, dest_folder):
 def store_data(raw_folder, stored_base_folder):
     """
     Copy downloaded files from the raw folder into the stored folder structure.
-    The structure is: stored_base_folder/year/month/day/
+    
+    The stored structure will be:
+       stored_base_folder/year/month/day/
+    
     Each file name will be appended with the current timestamp.
+    To ensure only the new (timestamp) version is saved, the target folder for the day is
+    cleared before copying.
     """
     # Get current timestamp details.
     timestamp = datetime.now()
@@ -42,8 +49,11 @@ def store_data(raw_folder, stored_base_folder):
     day = timestamp.strftime("%d")
     time_str = timestamp.strftime("%Y%m%d_%H%M%S")
     
-    # Define target folder structure.
+    # Define the target folder structure.
     target_folder = os.path.join(stored_base_folder, year, month, day)
+    # Remove the target folder if it already exists so that only the new version remains.
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
     os.makedirs(target_folder, exist_ok=True)
     
     # For each file in the raw folder, copy it to target_folder with timestamp appended.
