@@ -36,14 +36,17 @@ def store_data(raw_folder, stored_base_folder):
     Copy downloaded files from the raw folder into the stored folder structure.
     
     The stored structure will be:
-       stored_base_folder/year/month/day/
+       stored_base_folder/<source>/<year>/<month>/<day>/
     
     Each file name will be appended with the current timestamp.
     
     After copying, this function deletes any file directly in the 
-    stored_base_folder (non-directory items) to ensure only the timestamped versions remain.
+    stored_base_folder (non-directory items) to ensure only timestamped versions remain.
+    
+    Importantly, if the day's target folder already exists, it is left intact so that 
+    multiple DAG runs on the same day will accumulate new timestamped files.
     """
-    import shutil, re
+    import re
 
     # Get current timestamp details.
     timestamp = datetime.now()
@@ -53,11 +56,9 @@ def store_data(raw_folder, stored_base_folder):
     time_str = timestamp.strftime("%Y%m%d_%H%M%S")
     
     # Define the target folder structure.
-    target_folder = os.path.join(stored_base_folder, year, month, day)
-    # Remove the target folder if it already exists so that only the new version remains.
-    if os.path.exists(target_folder):
-        shutil.rmtree(target_folder)
-    os.makedirs(target_folder, exist_ok=True)
+    # We assume "kaggle" as the source name.
+    target_folder = os.path.join(stored_base_folder, "kaggle", year, month, day)
+    os.makedirs(target_folder, exist_ok=True)  # DO NOT remove the folder if it exists.
     
     # Copy each file from the raw folder into the target folder with a timestamp appended.
     for file in os.listdir(raw_folder):
@@ -69,7 +70,7 @@ def store_data(raw_folder, stored_base_folder):
             shutil.copy(file_path, target_file)
             logging.info(f"Stored file {target_file}")
     
-    # Now, remove any files that might be directly under stored_base_folder (non-directory entries)
+    # Clean up: remove any files directly under stored_base_folder (non-directory items)
     for item in os.listdir(stored_base_folder):
         item_path = os.path.join(stored_base_folder, item)
         if os.path.isfile(item_path):
@@ -99,5 +100,5 @@ if __name__ == "__main__":
     download_kaggle_dataset(dataset_slug, raw_folder)
     
     # Now copy the downloaded file(s) into the stored folder structure.
-    stored_folder = os.path.join(project_root, "data", "stored", "raw", "kaggle")
+    stored_folder = os.path.join(project_root, "data", "stored", "raw")
     store_data(raw_folder, stored_folder)
