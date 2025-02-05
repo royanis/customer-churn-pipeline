@@ -2,3 +2,7 @@
 2025-02-05 19:18:43,610:INFO:20250205_191840: Successfully downloaded dataset HRAnalyticRepository/employee-attrition-data to /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/raw/kaggle
 2025-02-05 19:18:43,611:INFO:Stored file /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/stored/raw/kaggle/2025/02/05/.DS_Store_20250205_191843
 2025-02-05 19:18:43,613:INFO:Stored file /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/stored/raw/kaggle/2025/02/05/MFG10YearTerminationData_20250205_191843.csv
+2025-02-05 19:19:37,640:INFO:20250205_191937: Starting download for dataset: HRAnalyticRepository/employee-attrition-data
+2025-02-05 19:19:40,323:INFO:20250205_191937: Successfully downloaded dataset HRAnalyticRepository/employee-attrition-data to /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/raw/kaggle
+2025-02-05 19:19:40,325:INFO:Stored file /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/stored/raw/kaggle/2025/02/05/.DS_Store_20250205_191940
+2025-02-05 19:19:40,327:INFO:Stored file /Users/atyuha/Documents/M.Tech/02 Sem 2/03 DMML/02 Assignments/customer_churn_group58_root/data/stored/raw/kaggle/2025/02/05/MFG10YearTerminationData_20250205_191940.csv
