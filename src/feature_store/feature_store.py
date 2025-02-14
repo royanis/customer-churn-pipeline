@@ -5,10 +5,10 @@ import json
 import sqlite3
 import pandas as pd
 
-# Compute the project root relative to this file (assumes file is in src/feature_store)
+# Compute the project root relative to this file
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-# Define the absolute path where the feature store (metadata) will be saved.
+# Define the absolute path where the feature store (metadata) will be saved
 FEATURE_STORE_PATH = os.path.join(PROJECT_ROOT, "data", "processed", "feature_store.json")
 
 def register_feature(feature_name, description, source, version):
@@ -21,14 +21,14 @@ def register_feature(feature_name, description, source, version):
         source (str): The origin of the feature (e.g., which transformation or raw data it comes from).
         version (str): Version of the feature.
     """
-    # Load existing feature metadata if available.
+    # Load existing feature metadata if available
     if os.path.exists(FEATURE_STORE_PATH):
         with open(FEATURE_STORE_PATH, 'r') as f:
             feature_store = json.load(f)
     else:
         feature_store = {}
 
-    # Update the feature store with the new feature.
+    # Update the feature store with the new feature
     feature_store[feature_name] = {
         "description": description,
         "source": source,
@@ -98,7 +98,6 @@ def retrieve_features(query="SELECT * FROM employee_features LIMIT 5",
     return df
 
 if __name__ == "__main__":
-    # Example: Register several engineered features with metadata.
     register_feature(
         feature_name="age",
         description="Normalized age of the employee.",

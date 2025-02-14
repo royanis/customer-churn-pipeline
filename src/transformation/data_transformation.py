@@ -27,23 +27,12 @@ def transform_data(df):
     df = df.drop(columns=[col for col in columns_to_drop if col in df.columns])
     
     # --- Step 2: Feature Engineering ---
-    # (Example) Create an AgeGroup feature if the 'age' column exists.
+    # Create an AgeGroup feature if the 'age' column exists.
     if 'age' in df.columns:
         # Define bins and labels for age groups.
         bins = [17, 30, 45, 60, 100]
         labels = ['Young', 'Mid-age', 'Senior', 'Veteran']
         df['AgeGroup'] = pd.cut(df['age'], bins=bins, labels=labels)
-    
-    # (Optional) Other feature engineering steps can be added here.
-    # For example, if you have MonthlyIncome and YearsAtCompany, you might add:
-    # if 'MonthlyIncome' in df.columns:
-    #     df['AnnualIncome'] = df['MonthlyIncome'] * 12
-    #     if 'YearsAtCompany' in df.columns:
-    #         df['IncomePerYear'] = df.apply(
-    #             lambda row: (row['MonthlyIncome'] * 12) / row['YearsAtCompany']
-    #             if row['YearsAtCompany'] > 0 else row['MonthlyIncome'] * 12,
-    #             axis=1
-    #         )
     
     # --- Step 3: Standardize Numeric Columns ---
     # Identify numeric columns (e.g., age, length_of_service)
@@ -63,7 +52,7 @@ def transform_data(df):
     # Determine high- versus low-cardinality columns based on a threshold.
     high_cardinality_cols = []
     low_cardinality_cols = []
-    cardinality_threshold = 50  # Adjust threshold as needed
+    cardinality_threshold = 50 
     print("\n=== Categorical Column Cardinality ===")
     for col in categorical_cols:
         unique_count = df[col].nunique()

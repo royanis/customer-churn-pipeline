@@ -61,7 +61,7 @@ def prepare_data(file_path):
       - Handling missing values.
       - Removing duplicates.
       - Removing outliers from numeric columns.
-      - (Optionally) Standardizing numeric columns.
+      - Standardizing numeric columns.
       - Processing categorical variables:
            * For columns with ≤ 20 unique values, apply one-hot encoding.
            * For columns with > 20 and ≤ 50 unique values, apply label encoding.
@@ -112,7 +112,7 @@ def prepare_data(file_path):
         if final_count < initial_count:
             print(f"Removed {initial_count - final_count} outlier rows from '{col}'.")
     
-    # --- Step 5: (Optional) Standardize Numeric Columns ---
+    # --- Step 5: Standardize Numeric Columns ---
     for col in numeric_cols:
         mean_val = df[col].mean()
         std_val = df[col].std()

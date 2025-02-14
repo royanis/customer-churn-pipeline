@@ -128,7 +128,7 @@ def save_model(model, output_path):
     print(f"Model saved to {output_path}")
 
 if __name__ == "__main__":
-    # Compute the project root relative to this file (assumes this file is in src/model)
+    # Compute the project root relative to this file.
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     
     # Define the path to the processed (clean) data.

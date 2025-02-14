@@ -27,14 +27,11 @@ dag = DAG(
 )
 
 # Define the base path relative to the DAG location.
-# NOTE: Remove the leading slash from "../src" so that it is a relative path.
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
 logging.info("BASE_PATH: %s", BASE_PATH)
 
 # Using `conda run` to execute commands in the 'base' environment.
 # For each task, we change directory to the task folder and then run the corresponding script.
-# Note: we use `python` instead of `python3` assuming the conda environment's python is correctly set up.
-# Adjust the command if your environment requires `python3`.
 
 # Task 1: Data Ingestion
 ingestion_path = shlex.quote(os.path.join(BASE_PATH, "ingestion"))
@@ -100,5 +97,5 @@ model_building_task = BashOperator(
     dag=dag
 )
 
-# Define task dependencies in the order specified by the assignment
+# Define task dependencies in the order
 ingestion_task >> raw_data_storage_task >> validation_task >> preparation_task >> transformation_task >> feature_store_task >> data_versioning_task >> model_building_task

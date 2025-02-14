@@ -78,7 +78,7 @@ def store_data(raw_folder, stored_base_folder):
             logging.info(f"Deleted non-timestamp file {item_path}")
 
 if __name__ == "__main__":
-    # Compute the project root (assumes this file is in src/ingestion)
+    # Compute the project root
     script_path = os.path.dirname(__file__)
     project_root = os.path.abspath(os.path.join(script_path, "../../"))
     
